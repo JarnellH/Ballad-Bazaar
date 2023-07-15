@@ -1,1 +1,40 @@
-Server is running.
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lyrics Analyzer</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Lyrics Analyzer</h1>
+    <form id="lyricsForm">
+        <textarea id="lyrics" placeholder="Enter your song lyrics here..." rows="10" cols="50"></textarea><br>
+        <input type="submit" value="Analyze Lyrics">
+    </form>
+
+    <h2>Analysis Results:</h2>
+    <p id="results"></p>
+
+    <script>
+        $("#lyricsForm").on('submit', function(e){
+            e.preventDefault();
+
+            let lyrics = $("#lyrics").val();
+            let data = { "lyrics": lyrics };
+
+            $.ajax({
+                type: "POST",
+                url: "http://localhost:3000/analyze_lyrics",
+                data: JSON.stringify(data),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function(data){
+                    $("#results").text(data.prompts);
+                },
+                failure: function(errMsg) {
+                    alert(errMsg);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
