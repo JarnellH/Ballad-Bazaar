@@ -6,7 +6,6 @@ from moviepy.editor import *
 import cv2
 import os
 from werkzeug.utils import secure_filename
-
 import requests
 
 
@@ -25,51 +24,8 @@ def root():
 def result():
     return app.send_static_file('result.html')
 
-@app.route('/begin_video_generation', methods=['POST'])
-def begin_video_generation():
-    lyrics = request.form.get("lyrics")
-    print(lyrics)
-    if 'song' not in request.files:
-        return {'message': 'No mp3 file in request'}
-    song = request.files['song']
-    if song.filename == '':
-        return {'message': 'No selected file'}
-    if song:
-        filename = secure_filename(song.filename)
-        song.save(os.path.join('', filename))
-        return {"done": 'donnne'}
-
-@app.route('/generate_music_video', methods=['POST'])
-def generate_music_video():
-    prompt = "Purple Dinosaur Dancing in a cave"
-    response = requests.get(f'https://thomaspinella--my-app-fastapi-app-dev.modal.run/vid?prompt={prompt}')
-    # with open('video.mp4', 'wb') as f:
-    #     f.write(response.content)
-    return response
-
-@app.route('/test_get', methods=['GET'])
-def test_get():
-    return { "message": "hello there" }
-
-# overlays the given video clip with the audio clip, use when final video is made
-def overlayAudio(clip, audio):
-    clipLen = clip.duration
-    audLen = audio.duration
-    if clipLen < audLen:
-        cuttoff = clipLen-audLen
-        audio = audio.subclip(0, cuttoff)
-    elif  clipLen > audLen:
-        cuttoff = audLen-clipLen
-        clip = clip.subclip(0,cuttoff)
-    clip.audio = audio
-    clip.write_videofile("NewMusicVideo.mp4")
-    clip.close()
-
-@app.route('/analyze_lyrics', methods=['POST'])
-def analyze_lyrics():
-    global prompt_storage 
-    data = request.get_json()
-    lyrics = data.get("lyrics")
+def analyze_lyrics(lyrics):
+    global prompt_storage
 
     response = openai.Completion.create(
         model="text-davinci-003",
@@ -89,14 +45,7 @@ def analyze_lyrics():
     prompts = response.choices[0].text.strip().split('.') # Separate prompts by period
     prompts = [prompt.strip() for prompt in prompts if prompt]
 
-    for prompt in prompts:
-        prompt_storage.append(prompt)
-
-    return {"prompts": prompts}
-
-@app.route('/get_prompts', methods=['GET'])  # Get stored prompts
-def get_prompts():
-    return {"stored_prompts": prompt_storage}
+    return prompts
 
 def extract_frames(video_path):
     # Open the video file
@@ -117,7 +66,7 @@ def extract_frames(video_path):
     video.release()
     
     return first_frame, last_frame
-#@app.route('/transition')
+
 def transition(path1, path2, name):
     firstVid = path1
     secondVid = path2
@@ -155,9 +104,21 @@ def transition(path1, path2, name):
     
     return name 
 
-#use this one
-@app.route('/videomaker')
-def videoMaker():
+# overlays the given video clip with the audio clip, use when final video is made
+def overlayAudio(clip, audio):
+    clipLen = clip.duration
+    audLen = audio.duration
+    if clipLen < audLen:
+        cuttoff = clipLen-audLen
+        audio = audio.subclip(0, cuttoff)
+    elif  clipLen > audLen:
+        cuttoff = audLen-clipLen
+        clip = clip.subclip(0,cuttoff)
+    clip.audio = audio
+    clip.write_videofile("NewMusicVideo.mp4")
+    clip.close()
+
+def videoMaker(prompts, song_file):
     vid1 = "video1"
     prompt = "A wealthy man, once accustomed to a life of privilege, finds himself humbled and on his knees, pleading for help or forgiveness from those around him."
     response = requests.get(f'https://thomaspinella--my-app-fastapi-app-dev.modal.run/vid?name={vid1}&prompt={prompt}')
@@ -209,55 +170,24 @@ def videoMaker():
     overlayAudio(final_clip, audio_background )
     return {"message: working"}
 
-@app.route('/img')
-def imgDisplay():
-    # Path to the MP4 video file
-    video_path = "C:\\Users\\Erics\\Ballad-Bazaar\\static\\WIN_20230715_15_59_03_Pro.mp4"
+# Main API Endpoint to generate music video
+@app.route('/begin_video_generation', methods=['POST'])
+def begin_video_generation():
+    lyrics = request.form.get("lyrics")
+    print(lyrics)
+    if 'song' not in request.files:
+        return {'message': 'No mp3 file in request'}
+    song = request.files['song']
+    if song.filename == '':
+        return {'message': 'No selected file'}
+    if song:
+        filename = secure_filename(song.filename)
+        song.save(os.path.join('', filename))
 
-    # Call the function to extract frames
-    first_frame, last_frame = extract_frames(video_path)
+        prompts = analyze_lyrics(lyrics)
+        videoMaker(prompts=prompts, song_file=filename)
 
-    # Display the first frame
-    #cv2.imshow("First Frame", first_frame)
-    #cv2.waitKey(0)
-    #return render_template("img.html", user_image = first_frame)
-    # Display the last frame
-    #cv2.imshow("Last Frame", last_frame)
-    #cv2.waitKey(0)
-    frameRate = 20
-    im_arr = []
-    firstOpacity = 1.0
-    secondOpacity = 0
-    height, width, layers = first_frame.shape
-    size = (width, height)
-    increment = 1.0/frameRate
-    for i in range(0,frameRate):
-        blended = cv2.addWeighted(first_frame, firstOpacity, last_frame, secondOpacity, 0 )
-        im_arr.append(blended)
-        #cv2.imshow('image',blended)
-        firstOpacity -= increment
-        secondOpacity += increment
-
-    out = cv2.VideoWriter('project.mp4',0x7634706d, 15, size )
-    print(len(im_arr))
-    for i in range(0, len(im_arr)):
-        #cv2.imshow("Frame", im_arr[i])
-        #cv2.waitKey(0)
-        out.write(im_arr[i])
-        
-    #media.save(video, name=filename)
-    #out.save(os.path.join("/tmp/", "myFile"))
-    out.release()
-    # Close all windows
-    cv2.destroyAllWindows()
-    #return app.send_static_file('img.html')
-    return render_template('img.html')
-
-if __name__ == '__main__':
-    app.run(host="localhost", port=3000, debug=True)
-
-
-
+        return {"File": 'NewMusicVideo.mp4'}
 
 if __name__ == '__main__':
     app.run(host="localhost", port=3000, debug=True)

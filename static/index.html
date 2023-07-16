@@ -80,16 +80,23 @@
             formData.append('song', file)
             formData.append("lyrics", lyrics)
 
-            const result = await fetch('http://localhost:3000/begin_video_generation', {
-              method: 'POST',
-              body: formData
-            })
-            .then(response => response.json())
-            .catch(error => console.error(error))
+            // Commented out for demo since it takes multiple minutes to generate a music video
 
-            console.log('Result:', result)
-            sessionStorage.setItem('videoSrc', result.video_url)
-            window.open('result.html', '_blank')
+            // const result = await fetch('http://localhost:3000/begin_video_generation', {
+            //   method: 'POST',
+            //   body: formData
+            // })
+            // .then(response => response.json())
+            // .catch(error => console.error(error))
+              // console.log('Result:', result)
+              // sessionStorage.setItem('videoSrc', result.video_url)
+              // window.open('result.html', '_blank')
+
+              setTimeout(() => {
+                sessionStorage.setItem('videoSrc', "http://localhost:3000/NewMusicVideo.mp4")
+                window.open('result', '_blank')
+            }, 3000)
+
         })
 
         const uploadFile = async () => {
@@ -186,13 +193,13 @@
         }, false);
     </script>
 
-<script>
-    document.getElementById('title-link').addEventListener('click', function (event) {
-        event.preventDefault();
-        var audio = document.getElementById('audio-player');
-        audio.play();
-    });
-</script>
+  <script>
+      document.getElementById('title-link').addEventListener('click', function (event) {
+          event.preventDefault();
+          var audio = document.getElementById('audio-player');
+          audio.play();
+      });
+  </script>
 
 </body>
 </html>
