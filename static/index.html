@@ -2,18 +2,29 @@
 <html>
 <head>
     <title>Lyrics Analyzer</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
-<body>
-    <h1>Lyrics Analyzer</h1>
-    <form id="lyricsForm">
-        <textarea id="lyrics" placeholder="Enter your song lyrics here..." rows="10" cols="50"></textarea><br>
-        <input type="submit" value="Analyze Lyrics">
-    </form>
+<body class="bg-light">
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                <h1 class="mb-4 text-center">Ballad Bazaar</h1>
+                <form id="lyricsForm">
+                    <div class="form-group">
+                        <textarea id="lyrics" placeholder="Enter your song lyrics here..." rows="10" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Music Video Prompt" class="btn btn-primary btn-block">
+                    </div>
+                </form>
 
-    <h2>Analysis Results:</h2>
-    <p id="results"></p>
-
+                <div id="results" class="mt-4"></div>
+            </div>
+        </div>
+    </div>
+    
     <script>
         $("#lyricsForm").on('submit', function(e){
             e.preventDefault();
@@ -28,7 +39,8 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function(data){
-                    $("#results").text(data.prompts);
+                    // Update the results div with the analysis
+                    $("#results").html("<h2>Analysis Results:</h2><p>" + data.prompts + "</p>");
                 },
                 failure: function(errMsg) {
                     alert(errMsg);

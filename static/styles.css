@@ -1,0 +1,26 @@
+body {
+    color: var(--bs-body-color);
+    background-color: var(--bs-gray-100);
+}
+
+h1, h2 {
+    color: var(--bs-primary);
+}
+
+#lyrics {
+    border-radius: var(--bs-border-radius);
+    border: var(--bs-border-width) var(--bs-border-style) var(--bs-gray-300);
+}
+
+#results {
+    border: var(--bs-border-width) var(--bs-border-style) var(--bs-gray-300);
+    border-radius: var(--bs-border-radius);
+    padding: 1rem;
+}
+
+input[type="submit"] {
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
+    color: var(--bs-white);
+    font-weight: 600;
+}
