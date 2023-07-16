@@ -3,31 +3,44 @@
 <head>
     <title>Lyrics Analyzer</title>
     <link rel="icon" href="static/favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" type="text/css" href="static/styles.css">
     <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="static/styles.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tilt+Neon&display=swap" rel="stylesheet">
+    <style>
+        .title{
+            margin-top: 20px;
+        }
+        .hidden {
+            display: none;
+        }
+        #title-link {
+            color: var(--neon-pink);
+            text-decoration: none;
+        }
+        .btn-custom {
+            margin-top: 100px;
+        }
+    </style>
 </head>
-<body class="bg-light">
-    <div class="area">
-        Drop your mp3 file here
-        <input type="file" id="upload" />
-    </div>
+<body>
     <div class="container py-5">
-        <div class="row">
-            <div class="col-md-8 offset-md-2">
-                <img src="static/animations/bblogo.gif" alt="Logo" class="mx-auto d-block" /> 
-                <h1 class="mb-4 text-center">Ballad Bazaar</h1>
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <img src="static/animations/bblogo.gif" alt="Logo" class="rounded-gif mx-auto d-block"/>
+                <h1 class="mb-4 text-center title">
+                    <a href="#" id="title-link" class="btn btn-primary btn-block btn-custom">Ballad Bazaar</a>
+                </h1>
                 <p class="text-center">The home of tiktokable music videos</p>
                 <p class="text-center">We dare you to take a journey into the “bazaar” <br>
                 <br>
                 Armed with an eclectic mix of song lyrics <br>
                 <br>
                 And come away with a tiktokable music video to share with your friends</p>
-                <div class="text-center">
-                    <audio controls>
+                <div class="text-center hidden">
+                    <audio id="audio-player" controls>
                         <source src="static/elevenlabs.mp3" type="audio/mpeg">
                         Your browser does not support the audio element.
                     </audio>
@@ -41,6 +54,10 @@
                     </div>
                 </form>
                 <div id="results" class="mt-4"></div>
+            </div>
+            <div class="area text-center">
+                <p>Drop your mp3 file here</p>
+                <input type="file" id="upload" />
             </div>
         </div>
     </div>
@@ -66,7 +83,6 @@ $("#lyricsForm").on('submit', function(e){
         }
     });
 });
-
 
         const musicAnalysisApiCall = async () => {
         fetch('https://api.cyanite.ai/graphql', {
@@ -141,5 +157,14 @@ $("#lyricsForm").on('submit', function(e){
         onFile();
         }, false);
     </script>
+
+<script>
+    document.getElementById('title-link').addEventListener('click', function (event) {
+        event.preventDefault();
+        var audio = document.getElementById('audio-player');
+        audio.play();
+    });
+</script>
+
 </body>
 </html>
