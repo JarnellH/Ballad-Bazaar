@@ -49,11 +49,40 @@ def extract_frames(video_path):
     
     return first_frame, last_frame
 
-@app.route('transition')
-def transition(firstVid, secondVid):
-    first_frame, last_frame = extract_frames(firstVid)
-    first_frame, last_frame = extract_frames(secondVid)
+@app.route('/transition')
+def transition():
+    firstVid = "C:\\Users\\Erics\\Ballad-Bazaar\\static\\our-video (1).mp4"
+    secondVid = "C:\\Users\\Erics\\Ballad-Bazaar\\static\\our-video (1).mp4"
 
+    firstVid1Frame, firstVid2Frame = extract_frames(firstVid)
+    lastVid1Frame, lastVid2Frame = extract_frames(secondVid)
+    frameRate = 20
+    im_arr = []
+    firstOpacity = 1.0
+    secondOpacity = 0
+    height, width, layers = firstVid1Frame.shape
+    size = (width, height)
+    increment = 1.0/frameRate
+    for i in range(0,frameRate):
+        blended = cv2.addWeighted(firstVid2Frame, firstOpacity, lastVid1Frame, secondOpacity, 0 )
+        im_arr.append(blended)
+        #cv2.imshow('image',blended)
+        firstOpacity -= increment
+        secondOpacity += increment
+
+    out = cv2.VideoWriter('secondProject.mp4',0x7634706d, 15, size )
+    middleVid = "C:\\Users\\Erics\\Ballad-Bazaar\\secondProject.mp4"
+    print(len(im_arr))
+    for i in range(0, len(im_arr)):
+        cv2.imshow("Frame", im_arr[i])
+        cv2.waitKey(0)
+        out.write(im_arr[i])
+
+    clip1 = VideoFileClip(firstVid)
+    clip2 = VideoFileClip(middleVid)
+    clip3 = VideoFileClip(secondVid)
+    final_clip = concatenate_videoclips([clip1,clip2,clip3])
+    final_clip.write_videofile("my_concatenation.mp4")
 
 @app.route('/img')
 def imgDisplay():
