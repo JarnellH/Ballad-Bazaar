@@ -6,6 +6,7 @@
 *.pem
 
 /env
+/venv
 /__pycache__
 .vscode
 .env

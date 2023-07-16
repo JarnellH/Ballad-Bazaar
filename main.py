@@ -33,7 +33,6 @@ def generate_music_video():
 def test_get():
     return { "message": "hello there" }
 
-<<<<<<< HEAD
 @app.route('/analyze_lyrics', methods=['POST'])
 def analyze_lyrics():
     global prompt_storage 
@@ -67,13 +66,6 @@ def analyze_lyrics():
 def get_prompts():
     return {"stored_prompts": prompt_storage}
 
-if __name__ == '__main__':
-    app.run(host="localhost", port=3000, debug=True)
-=======
-@app.route("/hello")
-def hello():
-    return "Hello, Welcome to GeeksForGeeks"
-
 def extract_frames(video_path):
     # Open the video file
     video = cv2.VideoCapture(video_path)
@@ -94,10 +86,11 @@ def extract_frames(video_path):
     
     return first_frame, last_frame
 
-@app.route('transition')
+@app.route('/transition')
 def transition(firstVid, secondVid):
     first_frame, last_frame = extract_frames(firstVid)
     first_frame, last_frame = extract_frames(secondVid)
+    return 'test'
 
 
 @app.route('/img')
@@ -154,6 +147,5 @@ def overlayAudio(clip, audio):
     clip.write_videofile("NewMusicVideo.mp4")
     clip.close()
 
-
-
->>>>>>> main
+if __name__ == '__main__':
+    app.run(host="localhost", port=3000, debug=True)
