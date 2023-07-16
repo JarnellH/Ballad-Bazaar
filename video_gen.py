@@ -40,7 +40,6 @@ async def vid(prompt="Darth Vader is surfing on waves", name="vader"):
     pipe.enable_vae_slicing()
     # pipe.unet.enable_forward_chunking(chunk_size=1, dim=1) # disable if enough memory as this slows down significantly
 
-    # prompt = "Darth Vader is surfing on waves"
     # height = 320, width = 576
     video_frames = pipe(prompt, num_inference_steps=40, height=568, width=320, num_frames=36).frames
     video_path = export_to_video(video_frames, output_video_path=f"/home/{name}.mp4")
@@ -50,9 +49,6 @@ async def vid(prompt="Darth Vader is surfing on waves", name="vader"):
     response.headers["Content-Disposition"] = f'attachment; filename={name}.mp4'
     
     return response
-    # return FileResponse(video_path, media_type="video/mp4")
-
-
 
 @stub.function(
     gpu="A100",
@@ -64,8 +60,7 @@ def fastapi_app():
     return web_app
 
 
-
-
+# For testing purposes:
 
 # @stub.function(
 #     gpu="A100",
