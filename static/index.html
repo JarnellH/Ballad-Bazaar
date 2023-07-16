@@ -7,6 +7,10 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body class="bg-light">
+    <div class="area">
+        Drop your mp3 file here
+        <input type="file" id="upload" />
+    </div>
     <div class="container py-5">
         <div class="row">
             <div class="col-md-8 offset-md-2">
@@ -51,6 +55,79 @@
                 }
             });
         });
+
+        const musicAnalysisApiCall = async () => {
+        fetch('https://api.cyanite.ai/graphql', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiSW50ZWdyYXRpb25BY2Nlc3NUb2tlbiIsInZlcnNpb24iOiIxLjAiLCJpbnRlZ3JhdGlvbklkIjo2MjYsInVzZXJJZCI6NTAxNjIsImFjY2Vzc1Rva2VuU2VjcmV0IjoiM2JkZDc1NzRhOGIwZTYyZGJkN2ViY2NlMmY0ZWMzZDFlY2U0MGJkNWE3MThhOGI4YjRkOTE1N2Q4N2MwOGJhYiIsImlhdCI6MTY4OTQ5Mjg2MX0.QpHTrNowFAuSgS0p8PfcrlBF8-kW37CyrOCEkncCwQ8'
+        },
+        body: JSON.stringify({
+            query: `query LibraryTracksQuery { libraryTracks(first: 10) { edges { node { id } } } }`,
+            variables: { first: 10 }
+        })
+        })
+        .then(response => response.json())
+        .then(data => console.log(data))
+        .catch(error => console.error('Error:', error));
+        }
+
+        musicAnalysisApiCall()
+
+        function readFile(files) {
+        var fileReader = new FileReader();
+            fileReader.readAsArrayBuffer(files[0]);
+            fileReader.onload = function(e) {
+            playAudioFile(e.target.result);
+            console.log(("Filename: '" + files[0].name + "'"), ( "(" + ((Math.floor(files[0].size/1024/1024*100))/100) + " MB)" ));
+            }
+        }
+        function playAudioFile(file) {
+        var context = new window.AudioContext();
+            context.decodeAudioData(file, function(buffer) {
+            var source = context.createBufferSource();
+                source.buffer = buffer;
+                source.loop = false;
+                source.connect(context.destination);
+                source.start(0); 
+            });
+        }
+
+        let upload = document.getElementById('upload')
+
+        function onFile() {
+        let file = upload.files[0]
+        let name = file.name.replace(/.[^/.]+$/, '')
+
+        if (file.type === 'audio/mp3' || file.type === 'audio/mpeg') {
+            if (file.size < (3000 * 1024)) {
+            upload.parentNode.className = 'area uploading'
+            readFile(upload.files)
+            } else {
+            window.alert('File size is too large, please ensure you are uploading a file of less than 3MB');
+            }
+        } else {
+            window.alert('File type ' + file.type + ' not supported');
+        }
+        console.log('upload code goes here', file, name);
+        }
+
+        upload.addEventListener('dragenter', function (e) {
+        upload.parentNode.className = 'area dragging';
+        }, false);
+
+        upload.addEventListener('dragleave', function (e) {
+        upload.parentNode.className = 'area';
+        }, false);
+
+        upload.addEventListener('dragdrop', function (e) {
+        onFile();
+        }, false);
+
+        upload.addEventListener('change', function (e) {
+        onFile();
+        }, false);
     </script>
 </body>
 </html>

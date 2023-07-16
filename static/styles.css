@@ -25,4 +25,46 @@ input[type="submit"] {
     color: var(--bs-dark);
     font-weight: 600;
     border-radius: 20px;
+
+.area {
+  width: 300px;
+  height: 300px;
+  line-height: 280px;
+  /* position: absolute; */
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 300px;
+  border: 4px dashed #000;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 64px 64px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  filter: alpha(opacity=50);
+  -khtml-opacity: 0.5;
+  -moz-opacity: 0.5;
+  opacity: 0.5;
+  text-align: center;
+}
+
+.area:hover,
+.area.dragging,
+.area.uploading {
+  filter: alpha(opacity=100);
+  -khtml-opacity: 1;
+  -moz-opacity: 1;
+  opacity: 1;
+}
+
+.area input {
+  width: 400%;
+  height: 100%;
+  margin-left: -300%;
+  border: none;
+  cursor: pointer;
+}
+
+.area input:focus {
+  outline: none;
 }
