@@ -5,9 +5,9 @@ from moviepy.video.fx.fadein import fadein
 from moviepy.video.fx.fadeout import fadeout
 
 
-clip1 = VideoFileClip("mrBeast.mp4")
+#clip1 = VideoFileClip("mrBeast.mp4")
 
-clip2 = VideoFileClip("mrBeast.mp4")
+#clip2 = VideoFileClip("mrBeast.mp4")
 
 #useful_clip1 = clip1.copy()
 #useful_clip2 = clip2.copy()
@@ -16,17 +16,22 @@ clip2 = VideoFileClip("mrBeast.mp4")
 #useful_clip1 = useful_clip1.fx(fadeout, 3)
 #useful_clip2 = useful_clip2.fx(fadein, 3)
 
-clip1 = clip1.fx(fadeout, 3)
-clip2 = clip2.fx(fadein, 3)
+#clip1 = clip1.fx(transfx.crossfadeout, .05)
+#clip2 = clip2.fx(transfx.crossfadein, .05)
 
 
 
-clipArray = [clip1, clip2]
+#clipArray = [clip1, clip2]
 
+#slided = [
+   # CompositeVideoClip([clip.fx(transfx.crossfadeout, .15)]) if idx % 2 == 0 else
+  #  CompositeVideoClip([clip.fx(transfx.crossfadein, .15)])
+ #   for idx, clip in enumerate(clipArray)
+#]
 
-fullMovie = concatenate_videoclips(clipArray)
+#fullMovie = concatenate_videoclips(slided)
 
-fullMovie.write_videofile("WORK.mp4")
+#fullMovie.write_videofile("WORK.mp4")
 
 
 #TODO: Process mp4 files and stitch them together cohesively
@@ -45,8 +50,15 @@ class VideoStitch:
 
             clip = VideoFileClip(mp4_file)
             clip_array.append(clip)
+
+        crossfaded_clips = [
+            CompositeVideoClip([clip.fx(transfx.crossfadeout, .15)]) if idx % 2 == 0 else
+            CompositeVideoClip([clip.fx(transfx.crossfadein, .15)])
+            for idx, clip in enumerate(clipArray)
+        ]
+
         
-        fullMovie = concatenate_videoclips(clip_array)
+        fullMovie = concatenate_videoclips(crossfaded_clips)
         fullMovie.write_videofile("combined_clips.mp4")
 
 

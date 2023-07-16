@@ -1,0 +1,11 @@
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+/env
+/__pycache__
+.vscode
+.env
