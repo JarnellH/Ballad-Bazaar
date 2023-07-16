@@ -10,6 +10,7 @@ h1, h2 {
 #lyrics {
     border-radius: var(--bs-border-radius);
     border: var(--bs-border-width) var(--bs-border-style) var(--bs-gray-300);
+    width: 50%;
 }
 
 #results {
@@ -26,18 +27,34 @@ input[type="submit"] {
     font-weight: 600;
     border-radius: 20px;
 
-.area {
-  width: 300px;
-  height: 300px;
-  line-height: 280px;
-  /* position: absolute; */
+}
+
+#upload {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.upload-area {
+  width: 50%;
+}
+
+.my-form {
+  display: flex;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 300px;
+  height: 350px;
+  gap: 15px;
+}
+
+.area {
+  /* width: 50%; */
+  /* height: 300px; */
+  line-height: 300px;
+  /* position: absolute; */
   border: 4px dashed #000;
-  background-position: center;
+  /* background-position: center;
   background-repeat: no-repeat;
-  background-size: 64px 64px;
+  background-size: 64px 64px; */
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
@@ -58,9 +75,9 @@ input[type="submit"] {
 }
 
 .area input {
-  width: 400%;
+  /* width: 400%;
   height: 100%;
-  margin-left: -300%;
+  margin-left: -300%; */
   border: none;
   cursor: pointer;
 }
