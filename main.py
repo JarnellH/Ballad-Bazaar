@@ -1,4 +1,7 @@
 from flask import Flask, render_template, flash, request, redirect, url_for
+import openai
+import re  # Add this line
+from dotenv import load_dotenv
 from moviepy.editor import *
 import cv2
 import os
@@ -8,6 +11,11 @@ import requests
 
 
 app = Flask(__name__)
+load_dotenv()
+
+openai.api_key = os.getenv("OPENAI_API_KEY")
+
+prompt_storage = []
 
 @app.route('/')
 def root():
@@ -25,9 +33,38 @@ def generate_music_video():
 def test_get():
     return { "message": "hello there" }
 
-@app.route("/hello")
-def hello():
-    return "Hello, Welcome to GeeksForGeeks"
+@app.route('/analyze_lyrics', methods=['POST'])
+def analyze_lyrics():
+    global prompt_storage 
+    data = request.get_json()
+    lyrics = data.get("lyrics")
+
+    response = openai.Completion.create(
+        model="text-davinci-003",
+        prompt=f"""
+        Take the given song lyrics and analyze them.
+        Using this analysis, generate four distinctive prompts that could be used to inspire scenes in a music video.
+        Please format each response as one sentence, and separate each response with a period.
+        Lyrics: {lyrics}
+        """,
+        temperature=1,
+        max_tokens=256,
+        top_p=1,
+        frequency_penalty=0,
+        presence_penalty=0
+    )
+
+    prompts = response.choices[0].text.strip().split('.') # Separate prompts by period
+    prompts = [prompt.strip() for prompt in prompts if prompt]
+
+    for prompt in prompts:
+        prompt_storage.append(prompt)
+
+    return {"prompts": prompts}
+
+@app.route('/get_prompts', methods=['GET'])  # Get stored prompts
+def get_prompts():
+    return {"stored_prompts": prompt_storage}
 
 def extract_frames(video_path):
     # Open the video file
@@ -138,5 +175,5 @@ def overlayAudio(clip, audio):
     clip.write_videofile("NewMusicVideo.mp4")
     clip.close()
 
-
-
+if __name__ == '__main__':
+    app.run(host="localhost", port=3000, debug=True)

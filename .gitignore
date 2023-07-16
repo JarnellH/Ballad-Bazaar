@@ -5,7 +5,8 @@
 .DS_Store
 *.pem
 
+/env
 /venv
 /__pycache__
 .vscode
-
+.env
