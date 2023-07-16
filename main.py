@@ -21,6 +21,10 @@ prompt_storage = []
 def root():
     return app.send_static_file('index.html')
 
+@app.route('/result')
+def result():
+    return app.send_static_file('result.html')
+
 @app.route('/begin_video_generation', methods=['POST'])
 def begin_video_generation():
     lyrics = request.form.get("lyrics")

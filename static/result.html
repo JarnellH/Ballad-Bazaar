@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- <link rel="stylesheet" type="text/css" href="static/styles.css"> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <title>Video Player</title>
+    <style>
+      #TikTokShare a {
+        color: #fff; 
+        background-color: #1a91da;
+        padding: 10px 20px; 
+        text-decoration: none;
+        border-radius: 5px;
+      }
+
+      #TikTokShare a:hover {
+        background-color: #1277b9; 
+      }
+    </style>
+</head>
+<body>
+    <center>
+     <h1>Music Video</h1>
+    </center>
+    <div>
+        <center>
+            <video controls width="640" height="360">
+                <source src="../combined_clips.mp4" type="video/mp4">
+            </video>
+        </center>
+    </div>
+
+    <div>
+        <div id="TikTok Share">
+            <center>
+                <a href="#" id="shareToTikTok">Share to TikTok</a>
+             </center>
+        </div>
+    </div>
+
+    <script>
+        
+        document.getElementById("shareToTikTok").addEventListener("click", function() {
+            var videoUrl = "file:///../combined_clips.mp4";
+
+            var tiktokUrl = "https://www.tiktok.com/sharing/video?url=" + encodeURIComponent(videoUrl);
+
+           
+            window.open(tiktokUrl, "_blank");
+        });
+    </script>
+</body>
+</html>

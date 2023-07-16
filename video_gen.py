@@ -29,7 +29,7 @@ async def bar(arg="world"):
     return HTMLResponse(f"<h1>Hello Fast {arg}!</h1>")
 
 @web_app.get("/vid")
-async def run_vid_gen(prompt="Darth Vader is surfing on waves"):
+async def vid(prompt="Darth Vader is surfing on waves", name="vader"):
     import torch
     from diffusers import DiffusionPipeline, DPMSolverMultistepScheduler
     from diffusers.utils import export_to_video
@@ -41,12 +41,13 @@ async def run_vid_gen(prompt="Darth Vader is surfing on waves"):
     # pipe.unet.enable_forward_chunking(chunk_size=1, dim=1) # disable if enough memory as this slows down significantly
 
     # prompt = "Darth Vader is surfing on waves"
-    video_frames = pipe(prompt, num_inference_steps=40, height=320, width=576, num_frames=36).frames
-    video_path = export_to_video(video_frames, output_video_path="/home/vader.mp4")
+    # height = 320, width = 576
+    video_frames = pipe(prompt, num_inference_steps=40, height=568, width=320, num_frames=36).frames
+    video_path = export_to_video(video_frames, output_video_path=f"/home/{name}.mp4")
     # file_path = "path_to_your_file/" + file_name
     file_like_object = open(video_path, mode="rb")
     response = StreamingResponse(file_like_object, media_type="video/mp4")
-    response.headers["Content-Disposition"] = f"attachment; filename=vader.mp4"
+    response.headers["Content-Disposition"] = f'attachment; filename={name}.mp4'
     
     return response
     # return FileResponse(video_path, media_type="video/mp4")

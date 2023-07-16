@@ -87,21 +87,9 @@
             .then(response => response.json())
             .catch(error => console.error(error))
 
-            // let data = { "lyrics": lyrics };
-
-            // $.ajax({
-            //     type: "POST",
-            //     url: "http://localhost:3000/analyze_lyrics",
-            //     data: JSON.stringify(data),
-            //     contentType: "application/json; charset=utf-8",
-            //     dataType: "json",
-            //     success: function(data){
-            //         $("#results").html("<h2>Analysis Results:</h2><p>" + data.prompts + "</p>");
-            //     },
-            //     failure: function(errMsg) {
-            //         alert(errMsg);
-            //     }
-            // });
+            console.log('Result:', result)
+            sessionStorage.setItem('videoSrc', result.video_url)
+            window.open('result.html', '_blank')
         })
 
         const uploadFile = async () => {
