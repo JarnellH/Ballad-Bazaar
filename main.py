@@ -21,6 +21,20 @@ prompt_storage = []
 def root():
     return app.send_static_file('index.html')
 
+@app.route('/begin_video_generation', methods=['POST'])
+def begin_video_generation():
+    lyrics = request.form.get("lyrics")
+    print(lyrics)
+    if 'song' not in request.files:
+        return {'message': 'No mp3 file in request'}
+    song = request.files['song']
+    if song.filename == '':
+        return {'message': 'No selected file'}
+    if song:
+        filename = secure_filename(song.filename)
+        song.save(os.path.join('', filename))
+        return {"done": 'donnne'}
+
 @app.route('/generate_music_video', methods=['POST'])
 def generate_music_video():
     prompt = "Purple Dinosaur Dancing in a cave"
