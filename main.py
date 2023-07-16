@@ -1,6 +1,7 @@
 from flask import Flask, request
 import openai
 import os
+import re  # Add this line
 from dotenv import load_dotenv
 
 app = Flask(__name__)
@@ -29,6 +30,7 @@ def analyze_lyrics():
         prompt=f"""
         Take the given song lyrics and analyze them.
         Using this analysis, generate four distinctive prompts that could be used to inspire scenes in a music video.
+        Please format each response as one sentence, and separate each response with a period.
         Lyrics: {lyrics}
         """,
         temperature=1,
@@ -38,7 +40,7 @@ def analyze_lyrics():
         presence_penalty=0
     )
 
-    prompts = re.split('1\.|2\.|3\.|4\.', response.choices[0].text.strip()) # Separate prompts by numbers
+    prompts = response.choices[0].text.strip().split('.') # Separate prompts by period
     prompts = [prompt.strip() for prompt in prompts if prompt]
 
     for prompt in prompts:

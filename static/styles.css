@@ -1,6 +1,6 @@
 body {
     color: var(--bs-body-color);
-    background-color: var(--bs-gray-100);
+    background-color: black;
 }
 
 h1, h2 {
@@ -16,11 +16,13 @@ h1, h2 {
     border: var(--bs-border-width) var(--bs-border-style) var(--bs-gray-300);
     border-radius: var(--bs-border-radius);
     padding: 1rem;
+    color: black;
 }
 
 input[type="submit"] {
-    background-color: var(--bs-primary);
-    border-color: var(--bs-primary);
-    color: var(--bs-white);
+    background-color: orange;
+    border-color: orange;
+    color: var(--bs-dark);
     font-weight: 600;
+    border-radius: 20px;
 }
